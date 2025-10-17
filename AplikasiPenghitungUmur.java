@@ -1,8 +1,11 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package Latihan2;
+
+
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -11,12 +14,13 @@ package Latihan2;
 public class AplikasiPenghitungUmur extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(AplikasiPenghitungUmur.class.getName());
-
+    private PenghitungUmurHelper helper; 
     /**
      * Creates new form AplikasiPenghitungUmur
      */
     public AplikasiPenghitungUmur() {
         initComponents();
+        helper = new PenghitungUmurHelper();
     }
 
     /**
@@ -50,13 +54,29 @@ public class AplikasiPenghitungUmur extends javax.swing.JFrame {
 
         jButton1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jButton1.setText("Hitung");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jButton2.setText("Reset");
+        jButton2.setText("Keluar");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jTextField1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
         jTextField2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+
+        jDateChooser1.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                jDateChooser1PropertyChange(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -101,6 +121,39 @@ public class AplikasiPenghitungUmur extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+           if (jDateChooser1.getDate() == null) {
+            JOptionPane.showMessageDialog(this, "Silakan pilih tanggal lahir terlebih dahulu.", "Peringatan", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        LocalDate tanggalLahir = jDateChooser1.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate hariIni = LocalDate.now();
+
+        if (tanggalLahir.isAfter(hariIni)) {
+            JOptionPane.showMessageDialog(this, "Tanggal lahir tidak boleh di masa depan!", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        Period umur = Period.between(tanggalLahir, hariIni);
+        jTextField1.setText(umur.getYears() + " tahun, " + umur.getMonths() + " bulan, " + umur.getDays() + " hari");
+
+        LocalDate nextUlang = tanggalLahir.withYear(hariIni.getYear());
+        if (!nextUlang.isAfter(hariIni)) {
+            nextUlang = nextUlang.plusYears(1);
+        }
+        long hariMenuju = ChronoUnit.DAYS.between(hariIni, nextUlang);
+        jTextField2.setText(nextUlang.toString() + " (" + hariMenuju + " hari lagi)");              
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jDateChooser1PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jDateChooser1PropertyChange
+
+    }//GEN-LAST:event_jDateChooser1PropertyChange
 
     /**
      * @param args the command line arguments
