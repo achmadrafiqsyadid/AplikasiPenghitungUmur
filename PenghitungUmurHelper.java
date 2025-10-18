@@ -163,7 +163,7 @@ public class PenghitungUmurHelper {
             return json.getString("translation");
 
         } catch (Exception e) {
-            return text + " (Gagal diterjemahkan)";
+            return text + " (Terjemahan gagal diambil)";
         }
     }
 }
